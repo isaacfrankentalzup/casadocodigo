@@ -4,9 +4,12 @@ import br.com.zupedu.casadocodigo.Controller.dto.AutorResponse;
 import br.com.zupedu.casadocodigo.Controller.dto.AutorResquest;
 import br.com.zupedu.casadocodigo.model.Autor;
 import br.com.zupedu.casadocodigo.repository.AutorRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/autores")
@@ -19,7 +22,13 @@ public class AutorController {
     }
 
     @PostMapping
-    public AutorResponse salvarAutor (@RequestBody @Valid AutorResquest autorResquest){
+    public ResponseEntity<AutorResponse>  salvarAutor (@RequestBody @Valid AutorResquest autorResquest){
+
+        Boolean existeEmail = repository.existsByEmail(autorResquest.getEmail());
+
+        if(existeEmail){
+            return ResponseEntity.badRequest().build();
+        }
 
         Autor autorSalvo = repository.save(autorResquest.toAutor());
 
@@ -30,6 +39,6 @@ public class AutorController {
                 autorSalvo.getCreateAt(),
                "Pige pas encore tout"
         );
-         return resposta;
+         return ResponseEntity.ok(resposta);
     }
 }
