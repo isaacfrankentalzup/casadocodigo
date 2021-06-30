@@ -12,7 +12,7 @@ import javax.validation.ValidationException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/autores")
+@RequestMapping("/api/v1/autores")
 public class AutorController {
 
     AutorRepository repository;
